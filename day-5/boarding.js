@@ -10,34 +10,47 @@ const readFile = require('../lib/readFile');
  * Every seat has a unique seat ID:
  *  row * 8 + column = seatId
  *
- *
- * 0000 0000
- * 0000 00X0
- * 0000 0000
- *
- * for each seat compute the seatId
- *
  */
-
 function boarding() {
   const boradingPasses = readFile('day-5/boarding-passes.txt').split('\n');
-
-  const allSeatIds = computeSeatIds();
-
-  const seatIds = boradingPasses.map((bp) => {
+  const allSeatIds = computeAllPossibleSeatIds();
+  const filledSeats = boradingPasses.map((bp) => {
     const row = computeRow(bp.slice(0, 7));
     const column = computeColumn(bp.slice(7));
-
     return row * 8 + column;
   });
 
-  let difference = allSeatIds.filter((x) => !seatIds.includes(x));
-  console.log(difference);
+  const yourSeat = findSeatId(allSeatIds, filledSeats);
 
-  // console.log(Math.max(...seatIds));
+  console.log('The max seatId is: ', Math.max(...filledSeats));
+  console.log('Your seatIs is: ', yourSeat);
 }
 
-function computeSeatIds() {
+boarding();
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+function findSeatId(allSeatIds, filledSeats) {
+  let difference = allSeatIds.filter((x) => !filledSeats.includes(x));
+  let yourSeat = 0;
+  for (let i = 0; i < difference.length; i++) {
+    const seatId = difference[i];
+    const nextSeatId = difference[i + 1];
+
+    if (seatId + 1 === nextSeatId) {
+      continue;
+    } else {
+      yourSeat = nextSeatId;
+      break;
+    }
+  }
+
+  return yourSeat;
+}
+
+function computeAllPossibleSeatIds() {
   const seatIds = [];
   for (let row = 0; row <= 127; row++) {
     for (let col = 0; col <= 7; col++) {
@@ -78,5 +91,3 @@ function computeColumn(directions) {
 
   return startCol;
 }
-
-boarding();
