@@ -12,17 +12,23 @@ function main() {
   }, 0);
 }
 
+console.log(main());
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
 function passportIsValid(passport) {
   const parts = passport.split(/\ |\n/gi);
   const entries = parts.map((p) => [p.split(':')[0], p.split(':')[1]]);
-  const keys = entries.map((e) => e[0]);
 
-  if (hasValidKeys(keys) && valuesAreValid(entries)) {
+  if (hasValidKeys(entries) && valuesAreValid(entries)) {
     return true;
   }
 }
 
-function hasValidKeys(keys) {
+function hasValidKeys(entries) {
+  const keys = entries.map((e) => e[0]);
   return keys.length === 8 || (keys.length === 7 && !keys.includes('cid'));
 }
 
@@ -127,5 +133,3 @@ function eclIsValid(value) {
 function pidIsValid(value) {
   return /[0-9]{9}/gi && value.length === 9;
 }
-
-console.log(main());
