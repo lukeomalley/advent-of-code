@@ -14,19 +14,15 @@ function customsPartOne() {
 customsPartOne();
 
 function customsPartTwo() {
-  const groups = readFile('day-6/customs.txt')
+  const sum = readFile('day-6/customs.txt')
     .split('\n\n')
     .map((groups) =>
       groups
         .split('\n')
         .map((person) => person.split(''))
         .reduce((a, b) => a.filter((c) => b.includes(c)))
-    );
-
-  let sum = 0;
-  for (const group of groups) {
-    sum += group.length;
-  }
+    )
+    .reduce((acc, arr) => acc + arr.length, 0);
 
   console.log('Part Two: ', sum);
 }
